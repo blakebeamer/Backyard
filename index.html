@@ -52,22 +52,60 @@
   .draw-export-panel textarea{width:100%;box-sizing:border-box;font-size:11px;font-family:monospace;height:90px;border:1px solid #e6e4df;border-radius:6px;padding:6px;resize:vertical;}
   .draw-hint{font-size:11px;color:#8a8579;line-height:1.5;margin-top:6px;}
   .concept-scene.scene-hidden{display:none;}
-  .draggable-item{cursor:grab;}
-  .draggable-item:hover{filter:drop-shadow(0 0 0 1px #2f6f4f) drop-shadow(0 0 3px rgba(47,111,79,.5));}
+  .draggable-item{cursor:inherit;}
+  
   .draggable-item.dragging{cursor:grabbing;opacity:.9;}
   .toggle-layer.layer-hidden{display:none;}
   #footer{position:fixed;left:256px;bottom:10px;font-size:12px;color:#8a8579;}
   #hover-tooltip{position:fixed;pointer-events:none;background:rgba(30,28,25,.94);color:#fff;font-size:12px;font-weight:600;padding:5px 10px;border-radius:5px;line-height:1.4;z-index:1000;opacity:0;transform:translateY(2px);transition:opacity .12s ease,transform .12s ease;max-width:220px;box-shadow:0 2px 8px rgba(0,0,0,.25);}
   #hover-tooltip.visible{opacity:1;transform:translateY(0);}
+
+  #panel{width:272px;padding:0;background:#fff;border-right:1px solid #ebe9e4;display:flex;flex-direction:column;}
+  .pn-head{padding:18px 18px 4px;}
+  .pn-title{font-size:16px;font-weight:700;color:#2b2925;letter-spacing:-.01em;}
+  .pn-sub{font-size:12px;color:#8f8a80;margin-top:2px;}
+  .pn-actions{display:flex;gap:6px;padding:10px 18px 6px;}
+  .pn-chip{flex:1;border:1px solid #e6e3dc;background:#faf9f7;border-radius:7px;padding:7px 0;font-size:12px;font-weight:600;color:#4a463f;cursor:pointer;}
+  .pn-chip:hover{background:#f2f0eb;}
+  #toggle-list{padding:4px 10px 8px;overflow-y:auto;flex:1;}
+  .grp{margin-top:10px;}
+  .grp-head{display:flex;align-items:center;justify-content:space-between;padding:6px 8px;}
+  .grp-name{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9a958b;}
+  .grp-btn{border:none;background:none;font-size:11px;font-weight:600;color:#2f6f4f;cursor:pointer;padding:2px 4px;border-radius:4px;}
+  .grp-btn:hover{background:#eef5f0;}
+  .row{display:flex;align-items:center;gap:10px;padding:7px 8px;border-radius:8px;cursor:pointer;user-select:none;transition:background .12s;}
+  .row:hover{background:#f5f4f1;}
+  .row .sw{width:14px;height:14px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.08);transition:opacity .12s;}
+  .row .sw.brick{background-image:repeating-linear-gradient(0deg,#d98b69,#d98b69 3px,#c27656 3px,#c27656 6px);}
+  .row .txt{flex:1;min-width:0;}
+  .row .nm{font-size:13.5px;color:#2b2925;line-height:1.25;transition:color .12s;}
+  .row .meta{font-size:11.5px;color:#9a958b;line-height:1.3;margin-top:1px;}
+  .row.off .nm{color:#a9a49a;}
+  .row.off .sw{opacity:.35;}
+  .eye{width:28px;height:28px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:6px;color:#2f6f4f;}
+  .row.off .eye{color:#c4bfb5;}
+  .row:hover .eye{background:#ebe9e4;}
+  .eye svg{width:17px;height:17px;}
+  .row input{display:none;}
+  .pn-foot{font-size:11.5px;color:#a19c92;padding:10px 18px 16px;border-top:1px solid #f0eee9;}
 </style>
 </head>
 <body>
 <div id="app">
   <div id="panel">
-    <h3>Backyard Design</h3>
-    <div class="concept-note" id="concept-note" style="display:none"></div>
-    <h3>Elements</h3>
+    <div class="pn-head">
+      <div class="pn-title">Backyard Plan</div>
+      <div class="pn-sub" id="pn-count"></div>
+    </div>
+    <div class="pn-actions">
+      <button type="button" class="pn-chip" id="pn-show-all">Show all</button>
+      <button type="button" class="pn-chip" id="pn-hide-all">Base only</button>
+    </div>
     <div id="toggle-list"></div>
+    
+    <div style="display:none"><div class="concept-note" id="concept-note" style="display:none"></div>
+    
+    
     <div class="hint" style="display:none">Toggle a category on/off. While visible, drag furniture and planter pots to reposition them anywhere in the yard. Your toggles and layout are remembered.</div>
     <div class="draw-section" style="display:none">
       <h3>Draw dimensions</h3>
@@ -93,6 +131,7 @@
       </div>
       <div class="draw-hint">Turn on Draw, then drag on the canvas to sketch a line (e.g. a dimension line), or tap once to type a label like 12'6". Works at any zoom level and saves automatically in this browser. Hit Export when you're done and send me that text so I can bake your dimensions permanently into the design.</div>
     </div>
+  </div>
   </div>
   <div id="canvas-wrap">
     <svg id="scene" width="860" height="866" viewBox="90 90 1720 1730" fill="none">
@@ -2255,6 +2294,11 @@
 
 </g>
 <g class="toggle-layer" data-layer="electrical" data-label="Electrical Subpanel">
+<path d="M1304.5 527L1304.5 929.5L1337 988L1337 1527.5" stroke="#FF7272" stroke-width="4"/>
+<circle cx="1336" cy="1293" r="8" fill="#FF7272" stroke="white" stroke-width="2"/>
+<circle cx="1337" cy="1526" r="8" fill="#FF7272" stroke="white" stroke-width="2"/>
+<circle cx="1306" cy="930" r="8" fill="#FF7272" stroke="white" stroke-width="2"/>
+<circle cx="1305" cy="524" r="8" fill="#FF7272" stroke="white" stroke-width="2"/>
 <rect x="1326" y="1497" width="15" height="3" fill="#BBBBBB"/>
 
 <rect x="1329.75" y="1500" width="7.5" height="6" fill="#B78866"/>
@@ -3638,7 +3682,6 @@
     </div>
   </div>
 </div>
-<div id="footer">1 ft &#8776; 17.7 units &middot; drawn to your final concept SVGs</div>
 <div id="hover-tooltip"></div>
 <script>
 (function(){
@@ -3663,7 +3706,7 @@
   var CONCEPT_NOTES = {
     concept4: 'Final layout: no deck. A wide paver pad sits on the upper level and wraps around the 10 ft stock tank pool, with a gravel ring at the pool edge and the pump just to the right. A horizontal block ledge runs across the yard to hold that upper level flat for the pool and pad. Below the ledge, the artificial turf area steps down slightly, with the shed sitting on the turf. Block ledges run along both sides of the basalt walkway, and bands of mixed-size river rock sit below the patio roof and along the back fence. The top band transitions from the patio to the marble chips and takes the water running off the patio roof.'
   };
-  var STORE_KEY = 'backyard_v22_exact_state';
+  var STORE_KEY = 'backyard_v26_exact_state';
   var svg = document.getElementById('scene');
   var list = document.getElementById('toggle-list');
   var note = document.getElementById('concept-note');
@@ -3675,7 +3718,7 @@
   } catch(e) {}
   Object.keys(LAYERS).forEach(function(cKey){
     LAYERS[cKey].forEach(function(l){
-      if (!(l.key in state.visible[cKey])) state.visible[cKey][l.key] = (['dimensions','furniture','umbrella','electrical','shed','planters'].indexOf(l.key) === -1);
+      if (!(l.key in state.visible[cKey])) state.visible[cKey][l.key] = (['dimensions','furniture','umbrella','electrical','shed','planters','boulders'].indexOf(l.key) === -1);
     });
   });
 
@@ -3720,38 +3763,87 @@
     });
   }
 
-  var infoOpen = {};
+
+  var META = {
+    pool: { name: 'Stock Tank Pool', meta: '10 ft round' },
+    poolpump: { name: 'Pool Pump', meta: 'Pump + plumbing' },
+    brickpavers: { name: 'Paver Pad', meta: '20 \u00d7 12 ft \u00b7 gravel ring' },
+    pavers: { name: 'Square Pavers', meta: 'Stepping pads' },
+    walls: { name: 'Block Ledges', meta: 'Walkway + level change' },
+    turf: { name: 'Artificial Turf', meta: '20 \u00d7 10 ft \u00b7 lower level' },
+    shed: { name: 'Shed', meta: 'On the turf' },
+    furniture: { name: 'Furniture', meta: 'Loungers, chairs, tables' },
+    umbrella: { name: 'Big Umbrella', meta: 'Planned' },
+    planters: { name: 'Planter Pots', meta: '' },
+    boulders: { name: 'Boulders', meta: 'Rock clusters' },
+    electrical: { name: 'Electrical', meta: 'Buried line + shed subpanel' },
+    dimensions: { name: 'Dimensions', meta: 'Measurement overlay' }
+  };
+  var GROUPS = [
+    { name: 'Pool', keys: ['pool', 'poolpump'] },
+    { name: 'Hardscape', keys: ['brickpavers', 'pavers', 'walls'] },
+    { name: 'Lawn + Structures', keys: ['turf', 'shed'] },
+    { name: 'Furnishings', keys: ['furniture', 'umbrella', 'planters', 'boulders'] },
+    { name: 'Utilities + Overlays', keys: ['electrical', 'dimensions'] }
+  ];
+  var EYE_ON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var EYE_OFF = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 5.2A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-2.6 3.4M6.6 6.6C3.9 8.3 2 12 2 12s3.6 7 10 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/><path d="M3 3l18 18"/></svg>';
+  var BASE_ONLY = ['pool', 'poolpump', 'brickpavers', 'pavers', 'walls', 'turf'];
+
+  function layerByKey(k){
+    var f = null;
+    LAYERS[state.concept].forEach(function(l){ if (l.key === k) f = l; });
+    return f;
+  }
+
+  function updateCount(){
+    var all = LAYERS[state.concept];
+    var on = all.filter(function(l){ return state.visible[state.concept][l.key]; }).length;
+    var el = document.getElementById('pn-count');
+    if (el) el.textContent = on + ' of ' + all.length + ' layers visible';
+  }
 
   function renderToggleList(){
     list.innerHTML = '';
-    LAYERS[state.concept].forEach(function(l){
-      var row = document.createElement('div');
-      row.className = 'toggle-row';
-      var swatchClass = 'swatch' + (l.brick ? ' brick' : '');
-      var swatchStyle = l.brick ? '' : ' style="background:' + l.color + '"';
-      var infoBtn = l.info ? '<button type="button" class="info-btn' + (infoOpen[l.key] ? ' open' : '') + '" data-info-key="' + l.key + '" aria-label="More info"></button>' : '';
-      row.innerHTML =
-        '<span class="lbl"><span class="' + swatchClass + '"' + swatchStyle + '></span>' + l.label + infoBtn + '</span>' +
-        '<label class="switch"><input type="checkbox" data-key="' + l.key + '"' + (state.visible[state.concept][l.key] ? ' checked' : '') + '><span class="slider"></span></label>';
-      list.appendChild(row);
-      if (l.info) {
-        var panel = document.createElement('div');
-        panel.className = 'info-panel' + (infoOpen[l.key] ? ' open' : '');
-        panel.setAttribute('data-info-panel', l.key);
-        panel.textContent = l.info;
-        list.appendChild(panel);
-      }
+    var vis = state.visible[state.concept];
+    GROUPS.forEach(function(g){
+      var keys = g.keys.filter(function(k){ return layerByKey(k); });
+      if (!keys.length) return;
+      var anyOn = keys.some(function(k){ return vis[k]; });
+      var grp = document.createElement('div');
+      grp.className = 'grp';
+      grp.innerHTML = '<div class="grp-head"><span class="grp-name">' + g.name + '</span>' +
+        '<button type="button" class="grp-btn" data-grp="' + keys.join(',') + '" data-to="' + (anyOn ? '0' : '1') + '">' + (anyOn ? 'Hide' : 'Show') + '</button></div>';
+      keys.forEach(function(k){
+        var l = layerByKey(k);
+        var m = META[k] || { name: l.label, meta: '' };
+        var on = !!vis[k];
+        var row = document.createElement('label');
+        row.className = 'row' + (on ? '' : ' off');
+        var sw = '<span class="sw' + (l.brick ? ' brick' : '') + '"' + (l.brick ? '' : ' style="background:' + l.color + '"') + '></span>';
+        row.innerHTML = sw +
+          '<span class="txt"><div class="nm">' + m.name + '</div>' + (m.meta ? '<div class="meta">' + m.meta + '</div>' : '') + '</span>' +
+          '<span class="eye" title="' + (on ? 'Hide' : 'Show') + '">' + (on ? EYE_ON : EYE_OFF) + '</span>' +
+          '<input type="checkbox" data-key="' + k + '"' + (on ? ' checked' : '') + '>';
+        grp.appendChild(row);
+      });
+      list.appendChild(grp);
     });
+    updateCount();
+  }
+
+  function setKeys(keys, val){
+    keys.forEach(function(k){ state.visible[state.concept][k] = val; });
+    applyLayerVisibility();
+    renderToggleList();
+    save();
   }
 
   list.addEventListener('click', function(e){
-    var btn = e.target.closest('.info-btn');
-    if (!btn) return;
-    var key = btn.getAttribute('data-info-key');
-    infoOpen[key] = !infoOpen[key];
-    btn.classList.toggle('open', infoOpen[key]);
-    var panel = list.querySelector('[data-info-panel="' + key + '"]');
-    if (panel) panel.classList.toggle('open', infoOpen[key]);
+    var gb = e.target.closest('.grp-btn');
+    if (!gb) return;
+    e.preventDefault();
+    setKeys(gb.getAttribute('data-grp').split(','), gb.getAttribute('data-to') === '1');
   });
 
   list.addEventListener('change', function(e){
@@ -3759,6 +3851,17 @@
     if (!key) return;
     state.visible[state.concept][key] = e.target.checked;
     applyLayerVisibility();
+    renderToggleList();
+    save();
+  });
+
+  document.getElementById('pn-show-all').addEventListener('click', function(){
+    setKeys(LAYERS[state.concept].map(function(l){ return l.key; }), true);
+  });
+  document.getElementById('pn-hide-all').addEventListener('click', function(){
+    LAYERS[state.concept].forEach(function(l){ state.visible[state.concept][l.key] = BASE_ONLY.indexOf(l.key) !== -1; });
+    applyLayerVisibility();
+    renderToggleList();
     save();
   });
 
@@ -3901,8 +4004,6 @@
   svg.addEventListener('pointerdown', function(e){
     if (drawMode) return;
     if (Object.keys(activePointers).length >= 2) return;
-    var item = e.target.closest('.draggable-item');
-    if (item) return;
     panPointerId = e.pointerId;
     panStartX = e.clientX; panStartY = e.clientY;
     panBaseX = panX; panBaseY = panY;
@@ -3931,8 +4032,7 @@
   svg.addEventListener('pointerdown', function(e){
     if (drawMode) return;
     if (Object.keys(activePointers).length >= 2) return;
-    var item = e.target.closest('.draggable-item');
-    if (!item) return;
+    return; // dragging disabled
     var scene = item.closest('.concept-scene');
     if (!scene || scene.classList.contains('scene-hidden')) return;
     var layer = item.closest('.toggle-layer');
